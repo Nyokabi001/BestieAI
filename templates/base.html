@@ -37,7 +37,7 @@
                             <i class="fas fa-home me-1"></i>Home
                         </a>
                     </li>
-                    {% if session.user_name %}
+                    {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('chat') }}">
                             <i class="fas fa-comments me-1"></i>Chat
@@ -54,8 +54,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-muted" href="{{ url_for('reset_session') }}">
-                            <i class="fas fa-sign-out-alt me-1"></i>Reset
+                        <a class="nav-link text-muted" href="{{ url_for('replit_auth.logout') }}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Sign Out
                         </a>
                     </li>
                     {% endif %}

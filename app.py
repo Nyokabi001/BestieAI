@@ -2,12 +2,46 @@ import os
 import logging
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase
+from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_login import current_user
 
 # Configure logging for debugging
 logging.basicConfig(level=logging.DEBUG)
 
+class Base(DeclarativeBase):
+    pass
+
+# Initialize Flask app
 app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "default_secret_key_for_development")
+app.secret_key = os.environ.get("SESSION_SECRET")
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1) # needed for url_for to generate with https
+
+# Database configuration
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    'pool_pre_ping': True,
+    "pool_recycle": 300,
+}
+
+db = SQLAlchemy(app, model_class=Base)
+
+# Import and register auth blueprint
+from replit_auth import make_replit_blueprint, require_login
+app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
+
+# Create tables
+with app.app_context():
+    import models  # noqa: F401
+    db.create_all()
+    logging.info("Database tables created")
+
+# Make session permanent
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 # Emotion-based responses
 EMOTION_RESPONSES = {
@@ -99,32 +133,23 @@ AFFIRMATIONS = {
 
 @app.route('/')
 def home():
-    return render_template('home.html')
-
-@app.route('/set_name', methods=['POST'])
-def set_name():
-    name = request.form.get('name', '').strip()
-    if name:
-        session['user_name'] = name
-        flash(f'Welcome, {name}! I\'m so happy you\'re here! 💖', 'success')
-        return redirect(url_for('chat'))
+    # Show landing page for logged out users, home page for logged in users
+    if current_user.is_authenticated:
+        # Get user's display name
+        display_name = current_user.first_name or current_user.email or "Bestie"
+        return render_template('user_home.html', name=display_name, user=current_user)
     else:
-        flash('Please enter your name to continue, bestie! 😊', 'error')
-        return redirect(url_for('home'))
+        return render_template('landing.html')
 
 @app.route('/chat')
+@require_login
 def chat():
-    if 'user_name' not in session:
-        flash('Please enter your name first! 😊', 'info')
-        return redirect(url_for('home'))
-    
-    return render_template('chat.html', name=session['user_name'])
+    display_name = current_user.first_name or current_user.email or "Bestie"
+    return render_template('chat.html', name=display_name, user=current_user)
 
 @app.route('/respond', methods=['POST'])
+@require_login
 def respond():
-    if 'user_name' not in session:
-        return redirect(url_for('home'))
-    
     emotion = request.form.get('emotion', '').lower()
     custom_feeling = request.form.get('custom_feeling', '').strip()
     
@@ -143,17 +168,16 @@ def respond():
     # Store the emotion in session for affirmations
     session['current_emotion'] = emotion_key
     
+    display_name = current_user.first_name or current_user.email or "Bestie"
     return render_template('chat.html', 
-                         name=session['user_name'], 
+                         name=display_name, 
                          feeling=feeling_text, 
-                         response=response)
+                         response=response,
+                         user=current_user)
 
 @app.route('/affirmation')
+@require_login
 def affirmation():
-    if 'user_name' not in session:
-        flash('Please enter your name first! 😊', 'info')
-        return redirect(url_for('home'))
-    
     # Get current emotion or default to happy
     emotion = session.get('current_emotion', 'happy')
     
@@ -161,43 +185,34 @@ def affirmation():
     import random
     daily_affirmation = random.choice(AFFIRMATIONS.get(emotion, AFFIRMATIONS['happy']))
     
+    display_name = current_user.first_name or current_user.email or "Bestie"
     return render_template('affirmation.html', 
-                         name=session['user_name'], 
+                         name=display_name, 
                          affirmation=daily_affirmation,
-                         emotion=emotion)
+                         emotion=emotion,
+                         user=current_user)
 
 @app.route('/journal')
+@require_login
 def journal():
-    if 'user_name' not in session:
-        flash('Please enter your name first! 😊', 'info')
-        return redirect(url_for('home'))
-    
-    return render_template('journal.html', name=session['user_name'])
+    display_name = current_user.first_name or current_user.email or "Bestie"
+    return render_template('journal.html', name=display_name, user=current_user)
 
 @app.route('/save_journal', methods=['POST'])
+@require_login
 def save_journal():
-    if 'user_name' not in session:
-        return redirect(url_for('home'))
-    
     journal_entry = request.form.get('journal_entry', '').strip()
     
     if journal_entry:
-        # Create filename based on user's name
-        username = session['user_name'].lower().replace(' ', '_')
-        filename = f"{username}_journal.txt"
-        
-        # Prepare entry with timestamp
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        entry_with_timestamp = f"\n--- {timestamp} ---\n{journal_entry}\n"
-        
         try:
-            # Ensure the journals directory exists
-            os.makedirs('journals', exist_ok=True)
-            
-            # Save to file in journals directory
-            filepath = os.path.join('journals', filename)
-            with open(filepath, 'a', encoding='utf-8') as f:
-                f.write(entry_with_timestamp)
+            # Save to database instead of file
+            from models import JournalEntry
+            new_entry = JournalEntry(
+                user_id=current_user.id,
+                content=journal_entry
+            )
+            db.session.add(new_entry)
+            db.session.commit()
             
             flash('Your journal entry has been saved! Thank you for sharing with me. 📝💕', 'success')
         except Exception as e:
@@ -208,11 +223,7 @@ def save_journal():
     
     return redirect(url_for('journal'))
 
-@app.route('/reset')
-def reset_session():
-    session.clear()
-    flash('Session reset! Feel free to start fresh, bestie! 🌟', 'info')
-    return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
