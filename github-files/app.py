@@ -1,8 +1,17 @@
-
-from flask import render_template, request, redirect, url_for, flash
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import User
+import os
 
+app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'dev_secret')  # Replace in production
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')  # From Render
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+# Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -10,6 +19,13 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
+# Routes
+@app.route('/')
+def home():
+    if current_user.is_authenticated:
+        return render_template('home.html', user=current_user)
+    return render_template('welcome.html')  # your landing page
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -51,3 +67,7 @@ def logout():
     logout_user()
     flash("You've been logged out.")
     return redirect(url_for('login'))
+
+# Run locally
+if __name__ == '__main__':
+    app.run(debug=True)
