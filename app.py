@@ -18,13 +18,15 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1) # needed for url_for to generate with https
 
-# Database configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+    # Database configuration
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://neondb_owner:npg_Cw2tzhoeLUf6@ep-restless-water-a8a98u39-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
+print("DATABASE URI:", app.config["SQLALCHEMY_DATABASE_URI"])
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    'pool_pre_ping': True,
-    "pool_recycle": 300,
-}
+        'pool_pre_ping': True,
+        "pool_recycle": 300,
+    }
 
 db = SQLAlchemy(app, model_class=Base)
 
