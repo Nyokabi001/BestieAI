@@ -1,0 +1,10 @@
+flask==3.0.0
+flask-sqlalchemy==3.1.1
+flask-login==0.6.3
+flask-dance==7.0.0
+psycopg2-binary==2.9.9
+pyjwt==2.8.0
+oauthlib==3.2.2
+gunicorn==21.2.0
+email-validator==2.1.0
+werkzeug==3.0.1

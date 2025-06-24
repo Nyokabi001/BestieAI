@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Chat with BestieAI - Emotional Support{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Chat Header -->
+            <div class="chat-header text-center py-4">
+                <h2 class="mb-3">
+                    <i class="fas fa-heart text-pink me-2"></i>
+                    Hey there, {{ name }} - what's in your heart today?
+                </h2>
+                <p class="text-muted">I'm right here with you, bestie. Your feelings are safe with me 💕</p>
+            </div>
+
+            <!-- Response Display -->
+            {% if response %}
+            <div class="card border-0 shadow-soft mb-4 response-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start">
+                        <div class="bestie-avatar me-3">
+                            <i class="fas fa-heart text-white"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-2 text-pink">Your Bestie 💕</h6>
+                            <p class="mb-2">I feel you, bestie. You're feeling <strong>{{ feeling }}</strong>, and I'm here for you.</p>
+                            <p class="mb-0 response-text">{{ response }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Emotion Selection Card -->
+            <div class="card border-0 shadow-soft">
+                <div class="card-body p-5">
+                    <form action="{{ url_for('respond') }}" method="POST" class="emotion-form">
+                        <div class="mb-4">
+                            <h5 class="mb-3">What's your heart feeling today, bestie?</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="happy" id="happy" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="happy">
+                                        <i class="fas fa-smile mb-2"></i><br>
+                                        Happy
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="sad" id="sad" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="sad">
+                                        <i class="fas fa-sad-tear mb-2"></i><br>
+                                        Sad
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="anxious" id="anxious" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="anxious">
+                                        <i class="fas fa-nervous mb-2"></i><br>
+                                        Anxious
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="stressed" id="stressed" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="stressed">
+                                        <i class="fas fa-weight-hanging mb-2"></i><br>
+                                        Stressed
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="overwhelmed" id="overwhelmed" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="overwhelmed">
+                                        <i class="fas fa-dizzy mb-2"></i><br>
+                                        Overwhelmed
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="tired" id="tired" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="tired">
+                                        <i class="fas fa-bed mb-2"></i><br>
+                                        Tired
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="angry" id="angry" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="angry">
+                                        <i class="fas fa-fire mb-2"></i><br>
+                                        Angry
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="lonely" id="lonely" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="lonely">
+                                        <i class="fas fa-heart-broken mb-2"></i><br>
+                                        Lonely
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="excited" id="excited" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="excited">
+                                        <i class="fas fa-star mb-2"></i><br>
+                                        Excited
+                                    </label>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <input type="radio" class="btn-check" name="emotion" value="confused" id="confused" autocomplete="off">
+                                    <label class="btn btn-outline-emotion w-100" for="confused">
+                                        <i class="fas fa-question-circle mb-2"></i><br>
+                                        Confused
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Feeling Input -->
+                        <div class="mb-4">
+                            <label for="custom_feeling" class="form-label">
+                                <i class="fas fa-edit me-1"></i>
+                                Or tell me in your own words, bestie:
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="custom_feeling" 
+                                   name="custom_feeling" 
+                                   placeholder="Share what's really going on in your heart..."
+                                   maxlength="100">
+                            <small class="form-text text-muted">Your words matter more than any button, love.</small>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-pink btn-lg px-5">
+                                <i class="fas fa-heart me-2"></i>
+                                Share with Your Bestie
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row g-3 mt-4">
+                <div class="col-md-6">
+                    <a href="{{ url_for('affirmation') }}" class="btn btn-outline-pink btn-lg w-100">
+                        <i class="fas fa-star me-2"></i>
+                        Get My Daily Affirmation
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{{ url_for('journal') }}" class="btn btn-outline-pink btn-lg w-100">
+                        <i class="fas fa-book me-2"></i>
+                        Write in My Journal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

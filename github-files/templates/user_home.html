@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome {{ name }} - BestieAI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Welcome Hero Section -->
+            <div class="welcome-hero text-center py-4">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    {% if user.profile_image_url %}
+                        <img src="{{ user.profile_image_url }}" alt="Profile" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;">
+                    {% else %}
+                        <i class="fas fa-user-circle text-pink fa-3x me-3"></i>
+                    {% endif %}
+                    <div>
+                        <h1 class="h2 mb-1 text-gradient">Welcome back, {{ name }}! 💕</h1>
+                        <p class="text-muted mb-0">I'm so happy to see you again, bestie!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <a href="{{ url_for('chat') }}" class="card border-0 shadow-soft h-100 text-decoration-none">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-comments text-pink fa-3x mb-3"></i>
+                            <h5 class="card-title">Share Your Feelings</h5>
+                            <p class="text-muted small mb-0">Tell me how you're feeling today and get personalized support</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('affirmation') }}" class="card border-0 shadow-soft h-100 text-decoration-none">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-star text-pink fa-3x mb-3"></i>
+                            <h5 class="card-title">Daily Affirmation</h5>
+                            <p class="text-muted small mb-0">Get an uplifting message tailored to your current mood</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('journal') }}" class="card border-0 shadow-soft h-100 text-decoration-none">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-book text-pink fa-3x mb-3"></i>
+                            <h5 class="card-title">Personal Journal</h5>
+                            <p class="text-muted small mb-0">Write down your thoughts in your private, secure space</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Emotional Wellness Tips -->
+            <div class="card border-0 bg-light-cream mb-4">
+                <div class="card-body p-4">
+                    <h6 class="card-title text-pink mb-3">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Today's Wellness Tip
+                    </h6>
+                    <p class="mb-2">
+                        Remember that it's perfectly okay to have difficult emotions. They're a natural part of being human, 
+                        and acknowledging them is the first step toward healing and growth.
+                    </p>
+                    <ul class="list-unstyled mb-0 text-muted small">
+                        <li><i class="fas fa-heart text-pink me-2"></i>Practice self-compassion today</li>
+                        <li><i class="fas fa-breathe text-pink me-2"></i>Take a few deep breaths when you feel overwhelmed</li>
+                        <li><i class="fas fa-smile text-pink me-2"></i>Celebrate small victories, no matter how minor they seem</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Getting Started -->
+            <div class="text-center">
+                <p class="text-muted mb-3">Ready to start? Choose what feels right for you today:</p>
+                <a href="{{ url_for('chat') }}" class="btn btn-pink btn-lg me-3 mb-2">
+                    <i class="fas fa-heart me-2"></i>
+                    Start Chatting
+                </a>
+                <a href="{{ url_for('affirmation') }}" class="btn btn-outline-pink btn-lg mb-2">
+                    <i class="fas fa-star me-2"></i>
+                    Get Affirmation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Journal - BestieAI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Journal Header -->
+            <div class="journal-header text-center py-4">
+                <h2 class="mb-3">
+                    <i class="fas fa-book text-pink me-2"></i>
+                    Your sacred space, {{ name }}
+                </h2>
+                <p class="text-muted">Pour your heart out here, bestie. This is where your truth lives 📝</p>
+            </div>
+
+            <!-- Journal Writing Card -->
+            <div class="card border-0 shadow-soft mb-4">
+                <div class="card-body p-5">
+                    <form action="{{ url_for('save_journal') }}" method="POST" class="journal-form">
+                        <div class="mb-4">
+                            <label for="journal_entry" class="form-label">
+                                <i class="fas fa-pen-fancy me-2 text-pink"></i>
+                                What's flowing through your heart today, bestie?
+                            </label>
+                            <textarea class="form-control journal-textarea" 
+                                      id="journal_entry" 
+                                      name="journal_entry" 
+                                      rows="10" 
+                                      placeholder="Hey bestie,&#10;&#10;Today my heart is feeling...&#10;&#10;Let it all out here - your dreams, fears, joys, struggles, or whatever is stirring in your soul. This sacred space holds it all with love. 💕"
+                                      required></textarea>
+                            <div class="form-text">
+                                <i class="fas fa-heart me-1 text-muted"></i>
+                                Your thoughts are treasured here, safe and private, just for you.
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-pink btn-lg px-5">
+                                <i class="fas fa-heart me-2"></i>
+                                Keep This Safe for Me
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Journal Tips -->
+            <div class="card border-0 bg-light-cream mb-4">
+                <div class="card-body p-4">
+                    <h6 class="card-title text-pink mb-3">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Journaling Tips for Emotional Wellness
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0 text-muted small">
+                                <li class="mb-2"><i class="fas fa-heart text-pink me-2"></i>Write without judgment - let your thoughts flow freely</li>
+                                <li class="mb-2"><i class="fas fa-clock text-pink me-2"></i>Try to journal at the same time each day</li>
+                                <li class="mb-2"><i class="fas fa-smile text-pink me-2"></i>Include both challenges and things you're grateful for</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0 text-muted small">
+                                <li class="mb-2"><i class="fas fa-star text-pink me-2"></i>Celebrate small wins and progress</li>
+                                <li class="mb-2"><i class="fas fa-rainbow text-pink me-2"></i>Use prompts if you're stuck: "Today I learned..." or "I'm proud of myself for..."</li>
+                                <li class="mb-2"><i class="fas fa-seedling text-pink me-2"></i>Remember: there's no right or wrong way to journal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a href="{{ url_for('affirmation') }}" class="btn btn-outline-pink btn-lg w-100">
+                        <i class="fas fa-star me-2"></i>
+                        Get Daily Affirmation
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{{ url_for('chat') }}" class="btn btn-outline-pink btn-lg w-100">
+                        <i class="fas fa-comments me-2"></i>
+                        Chat with BestieAI
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

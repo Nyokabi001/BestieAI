@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Affirmation - BestieAI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Affirmation Header -->
+            <div class="affirmation-header text-center py-4">
+                <h2 class="mb-3">
+                    <i class="fas fa-star text-pink me-2"></i>
+                    A loving reminder for you, {{ name }}
+                </h2>
+                <p class="text-muted">Your bestie has something beautiful to tell you today 💫</p>
+            </div>
+
+            <!-- Affirmation Card -->
+            <div class="card border-0 shadow-soft mb-5 affirmation-card">
+                <div class="card-body p-5 text-center">
+                    <div class="affirmation-icon mb-4">
+                        <i class="fas fa-sun text-golden fa-4x"></i>
+                    </div>
+                    
+                    <blockquote class="blockquote mb-4">
+                        <p class="affirmation-text">{{ affirmation }}</p>
+                    </blockquote>
+                    
+                    <div class="affirmation-footer">
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-heart text-pink me-1"></i>
+                            Created with love for your {{ emotion }} heart
+                            <i class="fas fa-heart text-pink ms-1"></i>
+                        </p>
+                        <small class="text-muted">
+                            Breathe this in, bestie. Let these words wrap around your heart like a warm hug 💕
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <button class="btn btn-pink btn-lg w-100" onclick="location.reload()">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        New Affirmation
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('chat') }}" class="btn btn-outline-pink btn-lg w-100">
+                        <i class="fas fa-comments me-2"></i>
+                        Chat with BestieAI
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('journal') }}" class="btn btn-outline-pink btn-lg w-100">
+                        <i class="fas fa-book me-2"></i>
+                        Write in Journal
+                    </a>
+                </div>
+            </div>
+
+            <!-- Reflection Prompt -->
+            <div class="card border-0 bg-light-cream">
+                <div class="card-body p-4">
+                    <h6 class="card-title text-pink mb-3">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Reflection Moment
+                    </h6>
+                    <p class="mb-2 text-muted">
+                        Take a few deep breaths and repeat this affirmation to yourself. How does it make you feel?
+                    </p>
+                    <ul class="list-unstyled mb-0 text-muted small">
+                        <li><i class="fas fa-check text-success me-2"></i>Say it out loud with confidence</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Feel the truth of these words</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Carry this energy with you today</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

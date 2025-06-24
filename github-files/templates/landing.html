@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to BestieAI - Your Emotional Support Companion{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Welcome Hero Section -->
+            <div class="welcome-hero text-center py-5">
+                <div class="hero-icon mb-4">
+                    <i class="fas fa-heart-circle text-pink"></i>
+                </div>
+                <h1 class="display-4 mb-3 text-gradient">Hello Bestie! 💕</h1>
+                <p class="lead mb-4 text-muted">
+                    I'm BestieAI, your personal emotional support companion. I'm here to listen, 
+                    support, and help you navigate your feelings with love and understanding.
+                </p>
+            </div>
+
+            <!-- Login Call to Action -->
+            <div class="card border-0 shadow-soft mb-5">
+                <div class="card-body p-5 text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-user-circle text-pink fa-3x mb-3"></i>
+                        <h3 class="card-title">Ready to start your journey?</h3>
+                        <p class="text-muted">Sign in to access your personalized emotional support experience</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="{{ url_for('replit_auth.login') }}" class="btn btn-pink btn-lg px-5 py-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Sign In to Get Started
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            Secure sign-in powered by Replit authentication
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Preview -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-comments text-pink fa-2x mb-3"></i>
+                        <h5>Emotional Support Chat</h5>
+                        <p class="text-muted small">Share how you're feeling and receive personalized, caring responses</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-star text-pink fa-2x mb-3"></i>
+                        <h5>Daily Affirmations</h5>
+                        <p class="text-muted small">Get uplifting affirmations tailored to your current emotional state</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-book text-pink fa-2x mb-3"></i>
+                        <h5>Personal Journal</h5>
+                        <p class="text-muted small">Write down your thoughts and feelings in a safe, private space</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card text-center p-4">
+                        <i class="fas fa-heart text-pink fa-2x mb-3"></i>
+                        <h5>Always Here for You</h5>
+                        <p class="text-muted small">24/7 emotional support whenever you need a caring friend</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
