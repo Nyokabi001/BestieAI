@@ -1,10 +1,9 @@
 from datetime import datetime
-
 from app import db
 from flask_dance.consumer.storage.sqla import OAuthConsumerMixin
 from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint
-
+from werkzeug.security import generate_password_hash, check_password_hash  # 👈 ADD THIS
 
 # (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
 class User(UserMixin, db.Model):
@@ -15,30 +14,15 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String, nullable=True)
     profile_image_url = db.Column(db.String, nullable=True)
 
+    # 👇 Add this field to store the hashed password
+    password_hash = db.Column(db.String(128))
+
     created_at = db.Column(db.DateTime, default=datetime.now)
-    updated_at = db.Column(db.DateTime,
-                           default=datetime.now,
-                           onupdate=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-# (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
-class OAuth(OAuthConsumerMixin, db.Model):
-    user_id = db.Column(db.String, db.ForeignKey(User.id))
-    browser_session_key = db.Column(db.String, nullable=False)
-    user = db.relationship(User)
+    # 👇 These two methods handle password hashing and checking
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
-    __table_args__ = (UniqueConstraint(
-        'user_id',
-        'browser_session_key',
-        'provider',
-        name='uq_user_browser_session_key_provider',
-    ),)
-
-# Journal entries linked to users
-class JournalEntry(db.Model):
-    __tablename__ = 'journal_entries'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.String, db.ForeignKey(User.id), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
-    
-    user = db.relationship(User, backref=db.backref('journal_entries', lazy=True))
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
