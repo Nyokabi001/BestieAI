@@ -28,10 +28,6 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 
 db = SQLAlchemy(app, model_class=Base)
 
-# Import and register auth blueprint
-from replit_auth import make_replit_blueprint, require_login
-app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
-
 # Create tables
 with app.app_context():
     import models
@@ -160,13 +156,11 @@ def home():
         return render_template('landing.html')
 
 @app.route('/chat')
-@require_login
 def chat():
     display_name = current_user.first_name or current_user.email or "Bestie"
     return render_template('chat.html', name=display_name, user=current_user)
 
 @app.route('/respond', methods=['POST'])
-@require_login
 def respond():
     emotion = request.form.get('emotion', '').lower()
     custom_feeling = request.form.get('custom_feeling', '').strip()
@@ -208,7 +202,6 @@ def respond():
                          user=current_user)
 
 @app.route('/affirmation')
-@require_login
 def affirmation():
     emotion = session.get('current_emotion', 'happy')
     
@@ -223,13 +216,11 @@ def affirmation():
                          user=current_user)
 
 @app.route('/journal')
-@require_login
 def journal():
     display_name = current_user.first_name or current_user.email or "Bestie"
     return render_template('journal.html', name=display_name, user=current_user)
 
 @app.route('/save_journal', methods=['POST'])
-@require_login
 def save_journal():
     journal_entry = request.form.get('journal_entry', '').strip()
     
