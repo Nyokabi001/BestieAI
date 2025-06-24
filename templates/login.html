@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Log In to BestieAI{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-5" style="max-width: 500px; width: 100%;">
+        <div class="text-center mb-4">
+            <i class="fas fa-heart text-pink fa-3x mb-3"></i>
+            <h2 class="text-gradient">Welcome Back, Bestie! 💖</h2>
+            <p class="text-muted">Log in to continue your emotional wellness journey.</p>
+        </div>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" name="email" class="form-control" required placeholder="bestie@email.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-pink w-100">Log In</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="small text-muted">Don’t have an account?</p>
+            <a href="{{ url_for('signup') }}" class="btn btn-outline-pink btn-sm">Sign Up</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
